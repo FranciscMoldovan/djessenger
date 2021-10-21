@@ -1,6 +1,11 @@
+{% load static %}
 <head>
-
+  hello <div>{{user}}</div>
 </head>
 <body>
-IT WORKS
+GROUP CHAT
+
+{% for message in data %}
+<div>{{message.owner.username}}::: {{message.contents}}</div>
+{% endfor %}
 </body>
