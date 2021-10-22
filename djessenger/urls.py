@@ -18,10 +18,9 @@ from django.urls import path
 
 from django.urls import include, path
 
-from chatapp import urls
+from chatapp import urls as urls_chatapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(urls))
-    # path('accounts/', include('django.contrib.auth.urls'))
+    path('', include(urls_chatapp))
 ]
