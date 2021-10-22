@@ -3,6 +3,7 @@ from .models import GroupChat, TypedMessage, ChatUser
 # Create your views here.
 # some restrictions on logged in users
 from django.contrib.auth import authenticate
+from django.db import connection
 
 from django.shortcuts import  render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -42,9 +43,19 @@ def chat_data(request):
     """
     user = request.user
     current_chat = GroupChat.objects.first().id
-    data = TypedMessage.objects.filter(chat=current_chat).values()
 
-    return JsonResponse({"data":list(data)})
+    data = TypedMessage.objects.filter(chat=current_chat).values()
+    users = ChatUser.objects.all().values()
+    dict_users = dict()
+    for u in users:
+        dict_users[u["id"]] = u["username"]
+    for d in data:
+        del d["id"]
+        d["from"] = dict_users[d["owner_id"]]
+        del d["chat_id"]
+        del d["owner_id"]
+
+    return JsonResponse({"data": list(data)})
 
 
 def add_message(request):

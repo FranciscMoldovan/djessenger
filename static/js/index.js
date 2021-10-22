@@ -1,27 +1,26 @@
-(function chatInit(){
-$(document).ready(function(){
+(function getChatData(){
+//$(document).ready(function(){
+        res_polling=""
         $.get("/chatdata", function(data, status){
           res_polling = JSON.stringify(data);
-          console.log(res_polling)
-          $('#chatbox').html(res_polling);
+
+            chat_text = $('#chatbox').text();
+
+            if (chat_text != res_polling)
+              {
+                    output = ""
+                    parsed_json = JSON.parse(res_polling)["data"];
+                    for (key in parsed_json) {
+                       value = parsed_json[key];
+                        console.log(key, value);
+                        output+="<span>"
+                        output+="<div>"+value["from"]+": ";
+                        output+= value["contents"]+"</div>";
+                        output+="</span>"
+                    }
+                    $('#chatbox').html(output);
+              }
         });
-    });
+         setTimeout(getChatData, 1000)
+
 })();
-
-(function pollMessages(){
-    $(document).ready(function(){
-
-        $.get("/chatdata", function(data, status){
-          res_polling = JSON.stringify(data);
-          chat_text = $('#chatbox').text();
-
-
-          if (chat_text != res_polling)
-          {
-            $('#chatbox').html(res_polling);
-          }
-          setTimeout(pollMessages, 1000)
-        });
-//      });
-    });
-})()
